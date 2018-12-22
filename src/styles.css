@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "Avenir-Black";
+  font-weight: 500;
+  src: url("./fonts/Avenir-Black.ttf");
+}
+
+@font-face {
+  font-family: "Avenir";
+  src: url("./fonts/Avenir-Book.ttf");
+}
+
+:root {
+  --header-size: 4rem;
+  --dark-9: hsla(0, 0%, 10%, 1);
+  --primary: hsla(51, 99%, 62%);
+}
+
+html {
+  font-family: "Avenir";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
