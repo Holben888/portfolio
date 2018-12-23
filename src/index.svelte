@@ -1,16 +1,20 @@
-<div class="container">
+<GradientManager on:update="updateGradients(event)" />
+<div class="content-container">
 	<div class="header-container">
-		<PopoutText words="BEN" />
-		<PopoutText words="HOLMES" />
+		<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="BEN" />
+		<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="HOLMES" />
 	</div>
+</div>
+<div class="footer-container">
+	<ColorBar />
 </div>
 
 <style>
-  .container {
+  .content-container {
     display: flex;
     width: 100%;
     height: 100%;
-    background: #333;
+    background: var(--dark-9);
     justify-content: flex-end;
     align-items: flex-start;
   }
@@ -24,13 +28,24 @@
 
 <script>
   import PopoutText from "./components/popout-text.svelte";
+  import ColorBar from "./components/color-bar.svelte";
+  import GradientManager from "./components/gradient-manager/index.svelte";
 
   export default {
-    data: () => ({
-      headerSize: "5rem"
-    }),
     components: {
-      PopoutText
-    }
+      PopoutText,
+      ColorBar,
+      GradientManager
+    },
+    methods: {
+      updateGradients(updated) {
+        this.set({
+          sharedGradient: updated
+        });
+      }
+    },
+    data: () => ({
+      sharedGradient: {}
+    })
   };
 </script>
