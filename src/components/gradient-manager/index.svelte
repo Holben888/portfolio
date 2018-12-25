@@ -26,7 +26,8 @@
     oncreate() {
       const colorShiftCallback = () => {
         const { index, textShadowCssString, textShadowList } = this.get();
-        const currentGradient = GRADIENTS[index];
+        const newIndex = (index + 1) % GRADIENTS.length;
+        const currentGradient = GRADIENTS[newIndex];
         let stepCount = 4;
         this.colorStep = setInterval(() => {
           stepCount--;
@@ -34,7 +35,9 @@
             clearInterval(this.colorStep);
           }
           const newState = {
-            index: (index + 1) % GRADIENTS.length,
+            index: newIndex,
+            gradientStart: GRADIENTS[newIndex][0],
+            gradientEnd: GRADIENTS[newIndex][GRADIENTS[newIndex].length - 1],
             ...getUpdatedGradientValues(
               textShadowList,
               stepCount,
@@ -46,10 +49,10 @@
         }, 150);
       };
       colorShiftCallback();
-      this.colorShift = setInterval(colorShiftCallback, 3000);
+      this.colorShift = setInterval(colorShiftCallback, 5000);
     },
     data: () => ({
-      index: 0,
+      index: -1,
       textShadowCssString: "",
       textShadowList: ["transparent", "transparent", "transparent", "transparent"]
     })
