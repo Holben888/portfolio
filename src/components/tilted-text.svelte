@@ -6,7 +6,7 @@
 
 <style>
   p {
-    color: var(--dark-9);
+    color: var(--grey-9);
     font-family: "Avenir-Black";
     font-size: var(--header-size);
     margin: 0.5rem;

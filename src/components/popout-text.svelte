@@ -10,7 +10,7 @@
     font-family: "Avenir-Black";
     font-size: var(--header-size);
     margin: 0;
-    padding: 0 1rem 0.6rem 0.5rem;
+    padding-bottom: 1rem;
     transition: text-shadow 0.5s ease-out;
   }
 
@@ -21,5 +21,10 @@
 </style>
 
 <script>
-  export default {};
+  export default {
+    data: () => ({
+      textShadowCss: "",
+      words: ""
+    })
+  };
 </script>

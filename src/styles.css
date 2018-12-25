@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,700');
 @font-face {
   font-family: "Avenir-Black";
   font-weight: 500;
@@ -11,7 +12,8 @@
 
 :root {
   --header-size: 4rem;
-  --dark-9: hsla(0, 0%, 10%, 1);
+  --grey-9: hsla(0, 0%, 10%, 1);
+  --grey-1: hsla(0, 0%, 90%, 1);
   --primary: hsla(51, 99%, 62%);
 }
 

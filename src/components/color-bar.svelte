@@ -3,20 +3,18 @@
 <style>
   .bar {
     width: 100%;
-    height: 1rem;
+    height: inherit;
     background-attachment: fixed;
-    background-position-x: 100%;
-    transition: all 2s ease-in-out;
+    transition: background-position 2s ease-in-out;
   }
 </style>
 
 <script>
   import GRADIENTS from "./gradient-manager/gradients";
   export default {
-    onupdate({ changed, current, previous }) {
+    onupdate({ changed, current }) {
       if (changed.gradientIndex && current.gradientIndex != null) {
         const { backgroundCss } = this.get();
-        console.log((100 / (GRADIENTS.length - 1)) * current.gradientIndex);
         this.set({
           backgroundCss: {
             ...backgroundCss,
@@ -41,7 +39,12 @@
       });
     },
     data: () => ({
-      backgroundCss: ""
+      backgroundCss: {
+        image: "",
+        size: "",
+        position: ""
+      },
+      gradientIndex: 0
     })
   };
 </script>
