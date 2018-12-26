@@ -1,0 +1,15 @@
+.icon__education {
+  background: url('./education.svg');
+}
+
+.icon__game-shelf {
+  background: url('./game-shelf.svg');
+}
+
+.icon__about {
+  background: url('./about.svg');
+}
+
+.icon__projects {
+  background: url('./projects.svg');
+}

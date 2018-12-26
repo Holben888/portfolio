@@ -1,5 +1,5 @@
 <script>
-  import GRADIENTS from "./gradients";
+  import GRADIENTS from "../res/gradients";
 
   const getUpdatedGradientValues = (gradientList, stepCount, currentGradient) => {
     const updatedGradientList = gradientList.map(

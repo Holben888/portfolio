@@ -1,10 +1,11 @@
 <GradientManager on:update="updateGradients(event)" />
 <div class="background">
 	<div class="content-container">
+		<Nav />
 		<div class="text-container">
 			<h1>
-				<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="BEN" />
-				<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="HOLMES" />
+				<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="BEN" size="{headerSize}" />
+				<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="HOLMES" size="{headerSize}" />
 			</h1>
 			<p>A student developer with a</p>
 			<p>
@@ -25,14 +26,18 @@
   .background {
     background: var(--grey-9);
     display: flex;
+    height: 100%;
+    width: 100%;
     justify-content: center;
+    align-items: center;
   }
   .content-container {
     width: 100%;
-    max-width: 80rem;
+    max-width: 100rem;
     height: 100%;
+    max-height: 70rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
   h1 {
     margin: 0;
@@ -40,8 +45,8 @@
   }
   .text-container {
     max-width: 30em;
-    padding: 1rem 2rem;
     overflow: scroll;
+    padding: 2rem 1.5rem;
   }
   .text-container > * {
     padding-bottom: 1rem;
@@ -71,14 +76,13 @@
 </style>
 
 <script>
-  import PopoutText from "./components/popout-text.svelte";
-  import ColorBar from "./components/color-bar.svelte";
-  import GradientManager from "./components/gradient-manager/index.svelte";
+  import { ColorBar, GradientManager, Nav, PopoutText } from "./components";
 
   export default {
     components: {
       PopoutText,
       ColorBar,
+      Nav,
       GradientManager
     },
     methods: {
@@ -89,7 +93,8 @@
       }
     },
     data: () => ({
-      sharedGradient: {}
+      sharedGradient: {},
+      headerSize: 5
     })
   };
 </script>

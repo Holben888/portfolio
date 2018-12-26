@@ -1,4 +1,4 @@
-<p style="text-shadow: {textShadowCss || " "}">
+<p style="text-shadow: {textShadowCss || " "}; --size: {size}rem">
 	{#each words.split("") as character}
 	<span>{character}</span>
 	{/each}
@@ -6,16 +6,17 @@
 
 <style>
   p {
+    --size: 0;
     color: transparent;
     font-family: "Avenir-Black";
-    font-size: var(--header-size);
+    font-size: var(--size);
     margin: 0;
     padding-bottom: 1rem;
     transition: text-shadow 0.5s ease-out;
   }
 
   span {
-    padding: calc(var(--header-size) * 0.08);
+    padding: calc(var(--size) * 0.08);
     position: relative;
   }
 </style>
@@ -24,7 +25,8 @@
   export default {
     data: () => ({
       textShadowCss: "",
-      words: ""
+      words: "",
+      size: 1
     })
   };
 </script>

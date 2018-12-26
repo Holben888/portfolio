@@ -10,7 +10,7 @@
 </style>
 
 <script>
-  import GRADIENTS from "./gradient-manager/gradients";
+  import GRADIENTS from "../res/gradients";
   export default {
     onupdate({ changed, current }) {
       if (changed.gradientIndex && current.gradientIndex != null) {
