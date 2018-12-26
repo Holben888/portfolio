@@ -30,14 +30,18 @@
     width: 100%;
     justify-content: center;
     align-items: center;
+    --footer-size: 1rem;
   }
   .content-container {
     width: 100%;
     max-width: 100rem;
     height: 100%;
     max-height: 70rem;
+    padding: 2rem;
+    margin-bottom: var(--footer-size);
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
   }
   h1 {
     margin: 0;
@@ -47,6 +51,7 @@
     max-width: 30em;
     overflow: scroll;
     padding: 2rem 1.5rem;
+    text-align: right;
   }
   .text-container > * {
     padding-bottom: 1rem;
@@ -68,7 +73,7 @@
   }
   .footer-container {
     width: 100%;
-    height: 1rem;
+    height: var(--footer-size);
     position: absolute;
     bottom: 0;
     left: 0;

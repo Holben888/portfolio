@@ -5,7 +5,7 @@
 
 <style>
   .nav {
-    width: 10rem;
+    padding: 1rem;
     height: 100%;
     display: flex;
     flex-direction: column;
