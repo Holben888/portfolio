@@ -1,0 +1,1091 @@
+(function () {
+	'use strict';
+
+	function noop() {}
+
+	function assign(tar, src) {
+		for (var k in src) tar[k] = src[k];
+		return tar;
+	}
+
+	function assignTrue(tar, src) {
+		for (var k in src) tar[k] = 1;
+		return tar;
+	}
+
+	function append(target, node) {
+		target.appendChild(node);
+	}
+
+	function insert(target, node, anchor) {
+		target.insertBefore(node, anchor);
+	}
+
+	function detachNode(node) {
+		node.parentNode.removeChild(node);
+	}
+
+	function destroyEach(iterations, detach) {
+		for (var i = 0; i < iterations.length; i += 1) {
+			if (iterations[i]) iterations[i].d(detach);
+		}
+	}
+
+	function createElement(name) {
+		return document.createElement(name);
+	}
+
+	function createSvgElement(name) {
+		return document.createElementNS('http://www.w3.org/2000/svg', name);
+	}
+
+	function createText(data) {
+		return document.createTextNode(data);
+	}
+
+	function children (element) {
+		return Array.from(element.childNodes);
+	}
+
+	function claimElement (nodes, name, attributes, svg) {
+		for (var i = 0; i < nodes.length; i += 1) {
+			var node = nodes[i];
+			if (node.nodeName === name) {
+				for (var j = 0; j < node.attributes.length; j += 1) {
+					var attribute = node.attributes[j];
+					if (!attributes[attribute.name]) node.removeAttribute(attribute.name);
+				}
+				return nodes.splice(i, 1)[0]; // TODO strip unwanted attributes
+			}
+		}
+
+		return svg ? createSvgElement(name) : createElement(name);
+	}
+
+	function claimText (nodes, data) {
+		for (var i = 0; i < nodes.length; i += 1) {
+			var node = nodes[i];
+			if (node.nodeType === 3) {
+				node.data = data;
+				return nodes.splice(i, 1)[0];
+			}
+		}
+
+		return createText(data);
+	}
+
+	function setData(text, data) {
+		text.data = '' + data;
+	}
+
+	function setStyle(node, key, value) {
+		node.style.setProperty(key, value);
+	}
+
+	function blankObject() {
+		return Object.create(null);
+	}
+
+	function destroy(detach) {
+		this.destroy = noop;
+		this.fire('destroy');
+		this.set = noop;
+
+		this._fragment.d(detach !== false);
+		this._fragment = null;
+		this._state = {};
+	}
+
+	function _differs(a, b) {
+		return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+	}
+
+	function fire(eventName, data) {
+		var handlers =
+			eventName in this._handlers && this._handlers[eventName].slice();
+		if (!handlers) return;
+
+		for (var i = 0; i < handlers.length; i += 1) {
+			var handler = handlers[i];
+
+			if (!handler.__calling) {
+				try {
+					handler.__calling = true;
+					handler.call(this, data);
+				} finally {
+					handler.__calling = false;
+				}
+			}
+		}
+	}
+
+	function flush(component) {
+		component._lock = true;
+		callAll(component._beforecreate);
+		callAll(component._oncreate);
+		callAll(component._aftercreate);
+		component._lock = false;
+	}
+
+	function get() {
+		return this._state;
+	}
+
+	function init(component, options) {
+		component._handlers = blankObject();
+		component._slots = blankObject();
+		component._bind = options._bind;
+		component._staged = {};
+
+		component.options = options;
+		component.root = options.root || component;
+		component.store = options.store || component.root.store;
+
+		if (!options.root) {
+			component._beforecreate = [];
+			component._oncreate = [];
+			component._aftercreate = [];
+		}
+	}
+
+	function on(eventName, handler) {
+		var handlers = this._handlers[eventName] || (this._handlers[eventName] = []);
+		handlers.push(handler);
+
+		return {
+			cancel: function() {
+				var index = handlers.indexOf(handler);
+				if (~index) handlers.splice(index, 1);
+			}
+		};
+	}
+
+	function set(newState) {
+		this._set(assign({}, newState));
+		if (this.root._lock) return;
+		flush(this.root);
+	}
+
+	function _set(newState) {
+		var oldState = this._state,
+			changed = {},
+			dirty = false;
+
+		newState = assign(this._staged, newState);
+		this._staged = {};
+
+		for (var key in newState) {
+			if (this._differs(newState[key], oldState[key])) changed[key] = dirty = true;
+		}
+		if (!dirty) return;
+
+		this._state = assign(assign({}, oldState), newState);
+		this._recompute(changed, this._state);
+		if (this._bind) this._bind(changed, this._state);
+
+		if (this._fragment) {
+			this.fire("state", { changed: changed, current: this._state, previous: oldState });
+			this._fragment.p(changed, this._state);
+			this.fire("update", { changed: changed, current: this._state, previous: oldState });
+		}
+	}
+
+	function _stage(newState) {
+		assign(this._staged, newState);
+	}
+
+	function callAll(fns) {
+		while (fns && fns.length) fns.shift()();
+	}
+
+	function _mount(target, anchor) {
+		this._fragment[this._fragment.i ? 'i' : 'm'](target, anchor || null);
+	}
+
+	var proto = {
+		destroy,
+		get,
+		fire,
+		on,
+		set,
+		_recompute: noop,
+		_set,
+		_stage,
+		_mount,
+		_differs
+	};
+
+	var GRADIENTS = [
+	  ["#fee140", "#f1b216", "#ec908b", "#ff638d"],
+	  ["#85FFBD", "#C1FCB0", "#D9FBA3", "#FFFB7D"],
+	  ["#FFDD8D", "#EEA87D", "#E05E57", "#E9002F"],
+	  ["#00DBDE", "#66A0E2", "#C942F3", "#FC00FF"]
+	];
+
+	/* src/components/color-bar.svelte generated by Svelte v2.16.0 */
+
+	function data() {
+		return {
+	  backgroundCss: {
+	    image: "",
+	    size: "",
+	    position: ""
+	  },
+	  gradientIndex: 0
+	};
+	}
+
+	function oncreate() {
+	  const imageCss =
+	    GRADIENTS.reduce(
+	      (cssString, gradient) =>
+	        `${cssString}, ${gradient[0]}, ${gradient[gradient.length - 1]}`,
+	      "linear-gradient(90deg"
+	    ) + ")";
+	  this.set({
+	    backgroundCss: {
+	      image: imageCss,
+	      size: `${GRADIENTS.length * 200}% 100%`,
+	      position: "0%"
+	    }
+	  });
+	}
+	function onupdate({ changed, current }) {
+	  if (changed.gradientIndex && current.gradientIndex != null) {
+	    const { backgroundCss } = this.get();
+	    this.set({
+	      backgroundCss: {
+	        ...backgroundCss,
+	        position: `${(100 / (GRADIENTS.length - 1)) * current.gradientIndex}%`
+	      }
+	    });
+	  }
+	}
+	function create_main_fragment(component, ctx) {
+		var div;
+
+		return {
+			c() {
+				div = createElement("div");
+				this.h();
+			},
+
+			l(nodes) {
+				div = claimElement(nodes, "DIV", { class: true, style: true }, false);
+				var div_nodes = children(div);
+
+				div_nodes.forEach(detachNode);
+				this.h();
+			},
+
+			h() {
+				div.className = "bar svelte-1xj7hd9";
+				setStyle(div, "background-image", ctx.backgroundCss.image);
+				setStyle(div, "background-size", ctx.backgroundCss.size);
+				setStyle(div, "background-position", ctx.backgroundCss.position);
+			},
+
+			m(target, anchor) {
+				insert(target, div, anchor);
+			},
+
+			p(changed, ctx) {
+				if (changed.backgroundCss) {
+					setStyle(div, "background-image", ctx.backgroundCss.image);
+					setStyle(div, "background-size", ctx.backgroundCss.size);
+					setStyle(div, "background-position", ctx.backgroundCss.position);
+				}
+			},
+
+			d(detach) {
+				if (detach) {
+					detachNode(div);
+				}
+			}
+		};
+	}
+
+	function Color_bar(options) {
+		init(this, options);
+		this._state = assign(data(), options.data);
+		this._intro = true;
+		this._handlers.update = [onupdate];
+
+		this._fragment = create_main_fragment(this, this._state);
+
+		this.root._oncreate.push(() => {
+			oncreate.call(this);
+			this.fire("update", { changed: assignTrue({}, this._state), current: this._state });
+		});
+
+		if (options.target) {
+			var nodes = children(options.target);
+			options.hydrate ? this._fragment.l(nodes) : this._fragment.c();
+			nodes.forEach(detachNode);
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+	}
+
+	assign(Color_bar.prototype, proto);
+
+	/* src/components/gradient-manager.svelte generated by Svelte v2.16.0 */
+
+	const getUpdatedGradientValues = (gradientList, stepCount, currentGradient) => {
+	  const updatedGradientList = gradientList.map(
+	    (color, index) =>
+	      index - stepCount >= 0 ? currentGradient[index - stepCount] : color
+	  );
+	  const updatedCssString = updatedGradientList.reduce(
+	    (updatedCssString, color, index) => {
+	      return `${updatedCssString} ${0.2 * index}rem ${0.2 *
+        index}rem 0 ${color}${
+        index < updatedGradientList.length - 1 ? "," : ""
+      }`;
+	    },
+	    ""
+	  );
+
+	  return {
+	    textShadowCssString: updatedCssString,
+	    textShadowList: updatedGradientList
+	  };
+	};
+
+	function data$1() {
+		return {
+	  index: -1,
+	  textShadowCssString: "",
+	  textShadowList: ["transparent", "transparent", "transparent", "transparent"]
+	};
+	}
+
+	function oncreate$1() {
+	  const colorShiftCallback = () => {
+	    const { index, textShadowCssString, textShadowList } = this.get();
+	    const newIndex = (index + 1) % GRADIENTS.length;
+	    const currentGradient = GRADIENTS[newIndex];
+	    let stepCount = 4;
+	    this.colorStep = setInterval(() => {
+	      stepCount--;
+	      if (stepCount <= 0) {
+	        clearInterval(this.colorStep);
+	      }
+	      const newState = {
+	        index: newIndex,
+	        gradientStart: GRADIENTS[newIndex][0],
+	        gradientEnd: GRADIENTS[newIndex][GRADIENTS[newIndex].length - 1],
+	        ...getUpdatedGradientValues(
+	          textShadowList,
+	          stepCount,
+	          currentGradient
+	        )
+	      };
+	      this.set(newState);
+	      this.fire("update", newState);
+	    }, 150);
+	  };
+	  colorShiftCallback();
+	  this.colorShift = setInterval(colorShiftCallback, 5000);
+	}
+	function create_main_fragment$1(component, ctx) {
+
+		return {
+			c: noop,
+
+			l: noop,
+
+			m: noop,
+
+			p: noop,
+
+			d: noop
+		};
+	}
+
+	function Gradient_manager(options) {
+		init(this, options);
+		this._state = assign(data$1(), options.data);
+		this._intro = true;
+
+		this._fragment = create_main_fragment$1(this, this._state);
+
+		this.root._oncreate.push(() => {
+			oncreate$1.call(this);
+			this.fire("update", { changed: assignTrue({}, this._state), current: this._state });
+		});
+
+		if (options.target) {
+			var nodes = children(options.target);
+			options.hydrate ? this._fragment.l(nodes) : this._fragment.c();
+			nodes.forEach(detachNode);
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+	}
+
+	assign(Gradient_manager.prototype, proto);
+
+	/* src/components/icon.svelte generated by Svelte v2.16.0 */
+
+	function data$2() {
+		return {
+	  size: "1rem",
+	  name: "education"
+	};
+	}
+
+	function create_main_fragment$2(component, ctx) {
+		var a, div, div_class_value;
+
+		return {
+			c() {
+				a = createElement("a");
+				div = createElement("div");
+				this.h();
+			},
+
+			l(nodes) {
+				a = claimElement(nodes, "A", { href: true, style: true, class: true }, false);
+				var a_nodes = children(a);
+
+				div = claimElement(a_nodes, "DIV", { class: true }, false);
+				var div_nodes = children(div);
+
+				div_nodes.forEach(detachNode);
+				a_nodes.forEach(detachNode);
+				this.h();
+			},
+
+			h() {
+				div.className = div_class_value = "icon icon__" + ctx.name + " svelte-18r0cz7";
+				a.href = "";
+				setStyle(a, "--size", "" + ctx.size + "rem");
+				a.className = "svelte-18r0cz7";
+			},
+
+			m(target, anchor) {
+				insert(target, a, anchor);
+				append(a, div);
+			},
+
+			p(changed, ctx) {
+				if ((changed.name) && div_class_value !== (div_class_value = "icon icon__" + ctx.name + " svelte-18r0cz7")) {
+					div.className = div_class_value;
+				}
+
+				if (changed.size) {
+					setStyle(a, "--size", "" + ctx.size + "rem");
+				}
+			},
+
+			d(detach) {
+				if (detach) {
+					detachNode(a);
+				}
+			}
+		};
+	}
+
+	function Icon(options) {
+		init(this, options);
+		this._state = assign(data$2(), options.data);
+		this._intro = true;
+
+		this._fragment = create_main_fragment$2(this, this._state);
+
+		if (options.target) {
+			var nodes = children(options.target);
+			options.hydrate ? this._fragment.l(nodes) : this._fragment.c();
+			nodes.forEach(detachNode);
+			this._mount(options.target, options.anchor);
+		}
+	}
+
+	assign(Icon.prototype, proto);
+
+	/* src/components/nav.svelte generated by Svelte v2.16.0 */
+
+	function data$3() {
+		return {
+	  icons: ["education", "projects", "game-shelf", "about"],
+	  iconSize: 3
+	};
+	}
+
+	function get_each_context(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.icon = list[i];
+		return child_ctx;
+	}
+
+	function create_main_fragment$3(component, ctx) {
+		var div;
+
+		var each_value = ctx.icons;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block(component, get_each_context(ctx, each_value, i));
+		}
+
+		return {
+			c() {
+				div = createElement("div");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+				this.h();
+			},
+
+			l(nodes) {
+				div = claimElement(nodes, "DIV", { class: true }, false);
+				var div_nodes = children(div);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].l(div_nodes);
+				}
+
+				div_nodes.forEach(detachNode);
+				this.h();
+			},
+
+			h() {
+				div.className = "nav svelte-116baiu";
+			},
+
+			m(target, anchor) {
+				insert(target, div, anchor);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(div, null);
+				}
+			},
+
+			p(changed, ctx) {
+				if (changed.icons || changed.iconSize) {
+					each_value = ctx.icons;
+
+					for (var i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block(component, child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(div, null);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+					each_blocks.length = each_value.length;
+				}
+			},
+
+			d(detach) {
+				if (detach) {
+					detachNode(div);
+				}
+
+				destroyEach(each_blocks, detach);
+			}
+		};
+	}
+
+	// (2:1) {#each icons as icon}
+	function create_each_block(component, ctx) {
+
+		var icon_initial_data = { name: ctx.icon, size: ctx.iconSize };
+		var icon = new Icon({
+			root: component.root,
+			store: component.store,
+			data: icon_initial_data
+		});
+
+		return {
+			c() {
+				icon._fragment.c();
+			},
+
+			l(nodes) {
+				icon._fragment.l(nodes);
+			},
+
+			m(target, anchor) {
+				icon._mount(target, anchor);
+			},
+
+			p(changed, ctx) {
+				var icon_changes = {};
+				if (changed.icons) icon_changes.name = ctx.icon;
+				if (changed.iconSize) icon_changes.size = ctx.iconSize;
+				icon._set(icon_changes);
+			},
+
+			d(detach) {
+				icon.destroy(detach);
+			}
+		};
+	}
+
+	function Nav(options) {
+		init(this, options);
+		this._state = assign(data$3(), options.data);
+		this._intro = true;
+
+		this._fragment = create_main_fragment$3(this, this._state);
+
+		if (options.target) {
+			var nodes = children(options.target);
+			options.hydrate ? this._fragment.l(nodes) : this._fragment.c();
+			nodes.forEach(detachNode);
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+	}
+
+	assign(Nav.prototype, proto);
+
+	/* src/components/popout-text.svelte generated by Svelte v2.16.0 */
+
+	function data$4() {
+		return {
+	  textShadowCss: "",
+	  words: "",
+	  size: 1
+	};
+	}
+
+	function get_each_context$1(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.character = list[i];
+		return child_ctx;
+	}
+
+	function create_main_fragment$4(component, ctx) {
+		var p;
+
+		var each_value = ctx.words.split("");
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block$1(component, get_each_context$1(ctx, each_value, i));
+		}
+
+		return {
+			c() {
+				p = createElement("p");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+				this.h();
+			},
+
+			l(nodes) {
+				p = claimElement(nodes, "P", { style: true, class: true }, false);
+				var p_nodes = children(p);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].l(p_nodes);
+				}
+
+				p_nodes.forEach(detachNode);
+				this.h();
+			},
+
+			h() {
+				setStyle(p, "text-shadow", (ctx.textShadowCss || " "));
+				setStyle(p, "--size", "" + ctx.size + "rem");
+				p.className = "svelte-107yxp8";
+			},
+
+			m(target, anchor) {
+				insert(target, p, anchor);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(p, null);
+				}
+			},
+
+			p(changed, ctx) {
+				if (changed.words) {
+					each_value = ctx.words.split("");
+
+					for (var i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context$1(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block$1(component, child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(p, null);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+					each_blocks.length = each_value.length;
+				}
+
+				if (changed.textShadowCss) {
+					setStyle(p, "text-shadow", (ctx.textShadowCss || " "));
+				}
+
+				if (changed.size) {
+					setStyle(p, "--size", "" + ctx.size + "rem");
+				}
+			},
+
+			d(detach) {
+				if (detach) {
+					detachNode(p);
+				}
+
+				destroyEach(each_blocks, detach);
+			}
+		};
+	}
+
+	// (2:1) {#each words.split("") as character}
+	function create_each_block$1(component, ctx) {
+		var span, text_value = ctx.character, text;
+
+		return {
+			c() {
+				span = createElement("span");
+				text = createText(text_value);
+				this.h();
+			},
+
+			l(nodes) {
+				span = claimElement(nodes, "SPAN", { class: true }, false);
+				var span_nodes = children(span);
+
+				text = claimText(span_nodes, text_value);
+				span_nodes.forEach(detachNode);
+				this.h();
+			},
+
+			h() {
+				span.className = "svelte-107yxp8";
+			},
+
+			m(target, anchor) {
+				insert(target, span, anchor);
+				append(span, text);
+			},
+
+			p(changed, ctx) {
+				if ((changed.words) && text_value !== (text_value = ctx.character)) {
+					setData(text, text_value);
+				}
+			},
+
+			d(detach) {
+				if (detach) {
+					detachNode(span);
+				}
+			}
+		};
+	}
+
+	function Popout_text(options) {
+		init(this, options);
+		this._state = assign(data$4(), options.data);
+		this._intro = true;
+
+		this._fragment = create_main_fragment$4(this, this._state);
+
+		if (options.target) {
+			var nodes = children(options.target);
+			options.hydrate ? this._fragment.l(nodes) : this._fragment.c();
+			nodes.forEach(detachNode);
+			this._mount(options.target, options.anchor);
+		}
+	}
+
+	assign(Popout_text.prototype, proto);
+
+	const ColorBar = Color_bar;
+	const GradientManager = Gradient_manager;
+	const Nav$1 = Nav;
+	const PopoutText = Popout_text;
+
+	/* src/App.svelte generated by Svelte v2.16.0 */
+
+	function data$5() {
+		return {
+	  sharedGradient: {},
+	  headerSize: 5
+	};
+	}
+
+	var methods = {
+	  updateGradients(updated) {
+	    this.set({
+	      sharedGradient: updated
+	    });
+	  }
+	};
+
+	function create_main_fragment$5(component, ctx) {
+		var text0, div3, div1, text1, div0, h1, text2, text3, p0, text4, text5, p1, span1, text6, span0, text7, text8, div2;
+
+		var gradientmanager = new GradientManager({
+			root: component.root,
+			store: component.store
+		});
+
+		gradientmanager.on("update", function(event) {
+			component.updateGradients(event);
+		});
+
+		var nav = new Nav$1({
+			root: component.root,
+			store: component.store
+		});
+
+		var popouttext0_initial_data = {
+		 	textShadowCss: ctx.sharedGradient.textShadowCssString,
+		 	words: "BEN",
+		 	size: ctx.headerSize
+		 };
+		var popouttext0 = new PopoutText({
+			root: component.root,
+			store: component.store,
+			data: popouttext0_initial_data
+		});
+
+		var popouttext1_initial_data = {
+		 	textShadowCss: ctx.sharedGradient.textShadowCssString,
+		 	words: "HOLMES",
+		 	size: ctx.headerSize
+		 };
+		var popouttext1 = new PopoutText({
+			root: component.root,
+			store: component.store,
+			data: popouttext1_initial_data
+		});
+
+		var colorbar0_initial_data = { gradientIndex: ctx.sharedGradient.index };
+		var colorbar0 = new ColorBar({
+			root: component.root,
+			store: component.store,
+			data: colorbar0_initial_data
+		});
+
+		var colorbar1_initial_data = { gradientIndex: ctx.sharedGradient.index };
+		var colorbar1 = new ColorBar({
+			root: component.root,
+			store: component.store,
+			data: colorbar1_initial_data
+		});
+
+		return {
+			c() {
+				gradientmanager._fragment.c();
+				text0 = createText("\n");
+				div3 = createElement("div");
+				div1 = createElement("div");
+				nav._fragment.c();
+				text1 = createText("\n\t\t");
+				div0 = createElement("div");
+				h1 = createElement("h1");
+				popouttext0._fragment.c();
+				text2 = createText("\n\t\t\t\t");
+				popouttext1._fragment.c();
+				text3 = createText("\n\t\t\t");
+				p0 = createElement("p");
+				text4 = createText("A student developer with a");
+				text5 = createText("\n\t\t\t");
+				p1 = createElement("p");
+				span1 = createElement("span");
+				text6 = createText("passion\n\t\t\t\t\t");
+				span0 = createElement("span");
+				colorbar0._fragment.c();
+				text7 = createText(" for web dev 👨‍💻");
+				text8 = createText("\n\t");
+				div2 = createElement("div");
+				colorbar1._fragment.c();
+				this.h();
+			},
+
+			l(nodes) {
+				gradientmanager._fragment.l(nodes);
+				text0 = claimText(nodes, "\n");
+
+				div3 = claimElement(nodes, "DIV", { class: true }, false);
+				var div3_nodes = children(div3);
+
+				div1 = claimElement(div3_nodes, "DIV", { class: true }, false);
+				var div1_nodes = children(div1);
+
+				nav._fragment.l(div1_nodes);
+				text1 = claimText(div1_nodes, "\n\t\t");
+
+				div0 = claimElement(div1_nodes, "DIV", { class: true }, false);
+				var div0_nodes = children(div0);
+
+				h1 = claimElement(div0_nodes, "H1", { class: true }, false);
+				var h1_nodes = children(h1);
+
+				popouttext0._fragment.l(h1_nodes);
+				text2 = claimText(h1_nodes, "\n\t\t\t\t");
+				popouttext1._fragment.l(h1_nodes);
+				h1_nodes.forEach(detachNode);
+				text3 = claimText(div0_nodes, "\n\t\t\t");
+
+				p0 = claimElement(div0_nodes, "P", { class: true }, false);
+				var p0_nodes = children(p0);
+
+				text4 = claimText(p0_nodes, "A student developer with a");
+				p0_nodes.forEach(detachNode);
+				text5 = claimText(div0_nodes, "\n\t\t\t");
+
+				p1 = claimElement(div0_nodes, "P", { class: true }, false);
+				var p1_nodes = children(p1);
+
+				span1 = claimElement(p1_nodes, "SPAN", { class: true }, false);
+				var span1_nodes = children(span1);
+
+				text6 = claimText(span1_nodes, "passion\n\t\t\t\t\t");
+
+				span0 = claimElement(span1_nodes, "SPAN", { class: true }, false);
+				var span0_nodes = children(span0);
+
+				colorbar0._fragment.l(span0_nodes);
+				span0_nodes.forEach(detachNode);
+				span1_nodes.forEach(detachNode);
+				text7 = claimText(p1_nodes, " for web dev 👨‍💻");
+				p1_nodes.forEach(detachNode);
+				div0_nodes.forEach(detachNode);
+				div1_nodes.forEach(detachNode);
+				text8 = claimText(div3_nodes, "\n\t");
+
+				div2 = claimElement(div3_nodes, "DIV", { class: true }, false);
+				var div2_nodes = children(div2);
+
+				colorbar1._fragment.l(div2_nodes);
+				div2_nodes.forEach(detachNode);
+				div3_nodes.forEach(detachNode);
+				this.h();
+			},
+
+			h() {
+				h1.className = "svelte-sernzh";
+				p0.className = "svelte-sernzh";
+				span0.className = "svelte-sernzh";
+				span1.className = "color-bar-underline svelte-sernzh";
+				p1.className = "svelte-sernzh";
+				div0.className = "text-container svelte-sernzh";
+				div1.className = "content-container svelte-sernzh";
+				div2.className = "footer-container svelte-sernzh";
+				div3.className = "background svelte-sernzh";
+			},
+
+			m(target, anchor) {
+				gradientmanager._mount(target, anchor);
+				insert(target, text0, anchor);
+				insert(target, div3, anchor);
+				append(div3, div1);
+				nav._mount(div1, null);
+				append(div1, text1);
+				append(div1, div0);
+				append(div0, h1);
+				popouttext0._mount(h1, null);
+				append(h1, text2);
+				popouttext1._mount(h1, null);
+				append(div0, text3);
+				append(div0, p0);
+				append(p0, text4);
+				append(div0, text5);
+				append(div0, p1);
+				append(p1, span1);
+				append(span1, text6);
+				append(span1, span0);
+				colorbar0._mount(span0, null);
+				append(p1, text7);
+				append(div3, text8);
+				append(div3, div2);
+				colorbar1._mount(div2, null);
+			},
+
+			p(changed, ctx) {
+				var popouttext0_changes = {};
+				if (changed.sharedGradient) popouttext0_changes.textShadowCss = ctx.sharedGradient.textShadowCssString;
+				if (changed.headerSize) popouttext0_changes.size = ctx.headerSize;
+				popouttext0._set(popouttext0_changes);
+
+				var popouttext1_changes = {};
+				if (changed.sharedGradient) popouttext1_changes.textShadowCss = ctx.sharedGradient.textShadowCssString;
+				if (changed.headerSize) popouttext1_changes.size = ctx.headerSize;
+				popouttext1._set(popouttext1_changes);
+
+				var colorbar0_changes = {};
+				if (changed.sharedGradient) colorbar0_changes.gradientIndex = ctx.sharedGradient.index;
+				colorbar0._set(colorbar0_changes);
+
+				var colorbar1_changes = {};
+				if (changed.sharedGradient) colorbar1_changes.gradientIndex = ctx.sharedGradient.index;
+				colorbar1._set(colorbar1_changes);
+			},
+
+			d(detach) {
+				gradientmanager.destroy(detach);
+				if (detach) {
+					detachNode(text0);
+					detachNode(div3);
+				}
+
+				nav.destroy();
+				popouttext0.destroy();
+				popouttext1.destroy();
+				colorbar0.destroy();
+				colorbar1.destroy();
+			}
+		};
+	}
+
+	function App(options) {
+		init(this, options);
+		this._state = assign(data$5(), options.data);
+		this._intro = true;
+
+		this._fragment = create_main_fragment$5(this, this._state);
+
+		if (options.target) {
+			var nodes = children(options.target);
+			options.hydrate ? this._fragment.l(nodes) : this._fragment.c();
+			nodes.forEach(detachNode);
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+	}
+
+	assign(App.prototype, proto);
+	assign(App.prototype, methods);
+
+	const target = document.querySelector('main');
+
+	setTimeout(() => {
+	  console.log("client!");
+	  new App({
+	    target,
+	    hydrate: true,
+	  });
+	}, 1000);
+
+}());
