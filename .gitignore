@@ -2,4 +2,5 @@
 /dist
 /.vscode
 /.cache
+/public/build
 .DS_Store

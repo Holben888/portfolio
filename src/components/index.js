@@ -1,13 +1,11 @@
-import ColorBar from './color-bar.svelte';
-import GradientManager from './gradient-manager.svelte';
-import Icon from './icon.svelte';
-import Nav from './nav.svelte';
-import PopoutText from './popout-text.svelte';
+import colorBar from './color-bar.svelte';
+import gradientManager from './gradient-manager.svelte';
+import icon from './icon.svelte';
+import nav from './nav.svelte';
+import popoutText from './popout-text.svelte';
 
-module.exports = {
-  ColorBar,
-  GradientManager,
-  Icon,
-  Nav,
-  PopoutText
-}
+export const ColorBar = colorBar;
+export const GradientManager = gradientManager;
+export const Icon = icon;
+export const Nav = nav;
+export const PopoutText = popoutText;

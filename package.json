@@ -1,17 +1,16 @@
 {
-  "name": "portfolio",
+  "name": "portfolio_ssr",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "svelte": "^2.15.3"
+    "express": "^4.16.4",
+    "rollup": "^1.0.0",
+    "rollup-plugin-svelte": "^5.0.0",
+    "svelte": "^2.16.0"
   },
   "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build index.html"
-  },
-  "devDependencies": {
-    "parcel-bundler": "^1.10.3",
-    "parcel-plugin-svelte": "^2.0.0"
+    "build": "rollup --watch -c rollup.config.js",
+    "serve": "node server.js"
   }
 }

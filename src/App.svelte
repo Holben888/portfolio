@@ -81,7 +81,12 @@
 </style>
 
 <script>
-  import { ColorBar, GradientManager, Nav, PopoutText } from "./components";
+  import {
+    ColorBar,
+    GradientManager,
+    Nav,
+    PopoutText
+  } from "./components/index.js";
 
   export default {
     components: {
