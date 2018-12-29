@@ -7,13 +7,12 @@
 				<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="BEN" size="{headerSize}" />
 				<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="HOLMES" size="{headerSize}" />
 			</h1>
-			<p>A student developer with a</p>
-			<p>
+			<p><span>A student developer with a</span>
 				<span class="color-bar-underline">passion
 					<span>
 						<ColorBar gradientIndex={sharedGradient.index} />
 					</span>
-				</span> for web dev 👨‍💻
+				</span> <span>for web dev 👨‍💻</span>
 			</p>
 		</div>
 	</div>

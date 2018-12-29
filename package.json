@@ -10,7 +10,8 @@
     "svelte": "^2.16.0"
   },
   "scripts": {
-    "build": "rollup --watch -c rollup.config.js",
+    "watch": "rollup --watch -c rollup.config.js",
+    "build": "rollup -c rollup.config.js",
     "serve": "node server.js"
   }
 }
