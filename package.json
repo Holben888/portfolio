@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "rollup": "^1.0.0",
+    "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-svelte": "^5.0.0",
     "svelte": "^2.16.0"
   },
@@ -13,5 +14,6 @@
     "watch": "rollup --watch -c rollup.config.js",
     "build": "rollup -c rollup.config.js",
     "serve": "node server.js"
-  }
+  },
+  "devDependencies": {}
 }

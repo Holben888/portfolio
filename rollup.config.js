@@ -1,23 +1,25 @@
 import svelte from 'rollup-plugin-svelte'
+import commonjs from 'rollup-plugin-commonjs'
 
 const clientConfig = {
   input: 'client.js',
   output: {
     file: 'public/build/bundle.js',
-    format: 'iife'
+    format: 'iife',
   },
   plugins: [
+    commonjs(),
     svelte({
       hydratable: true,
       css: false,
     })
   ],
 }
-const serverConfig = {
+const appConfig = {
   input: 'src/App.svelte',
   output: {
     file: 'public/build/app.js',
-    format: 'cjs'
+    format: 'cjs',
   },
   plugins: [
     svelte({
@@ -28,5 +30,5 @@ const serverConfig = {
 }
 export default [
   clientConfig,
-  serverConfig,
+  appConfig,
 ]

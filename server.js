@@ -1,6 +1,7 @@
 const express = require('express')
-const svelteApp = require('./public/build/app.js')
 const path = require('path')
+const svelteApp = require('./public/build/app.js')
+const routes = require('./src/pages/routes')
 
 const app = express()
 const port = 3000
@@ -23,7 +24,7 @@ const template = ({ html, css }) => `
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
   const rendered = svelteApp.render({})
   res.send(template(rendered));
 })

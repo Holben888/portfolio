@@ -1,6 +1,4 @@
-{#if gradientIndex != null}
 <div class="bar" style="background-image: {backgroundCss.image}; background-size: {backgroundCss.size}; background-position: {backgroundCss.position}"></div>
-{/if}
 
 <style>
   .bar {
