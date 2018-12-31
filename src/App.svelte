@@ -1,11 +1,14 @@
 <div class="background">
-	<div class="content-container">
-		<Nav on:pageChanged="onPageChange(event)" />
-		<svelte:component this="{pageComponent}" />
-	</div>
+	<Nav on:pageChanged="onPageChange(event)" width={navWidth} /> {#each pages as page} {#if renderAll || currentPage===page.name}
+	<content style="--navWidth: {navWidth}; display: {currentPage===page.name ? 'block' : 'none'}">
+		<svelte:component this="{page.component}" />
+	</content> {/if} {/each}
 </div>
 
 <style>
+  content {
+    width: calc(100vw - var(--navWidth));
+  }
   .background {
     background: var(--grey-9);
     display: flex;
@@ -14,27 +17,29 @@
     justify-content: center;
     align-items: center;
   }
-  .content-container {
-    --footer-size: 1rem;
-    width: 100%;
-    max-width: 100rem;
-    height: 100%;
-    max-height: 70rem;
-    padding: 2rem;
-    margin-bottom: var(--footer-size);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
 </style>
 
 <script>
   import Nav from "./components/nav.svelte";
   import Home from "./pages/Home.svelte";
   import Fake from "./pages/Fake.svelte";
+
+  const pages = [
+    {
+      name: "Home",
+      component: Home
+    },
+    {
+      name: "Fake",
+      component: Fake
+    }
+  ];
+
   export default {
     data: () => ({
-      currentPage: "Home"
+      pages: pages,
+      currentPage: "Home",
+      navWidth: "8rem"
     }),
     components: {
       Nav
@@ -42,12 +47,6 @@
     methods: {
       onPageChange(page) {
         this.set({ currentPage: page });
-      }
-    },
-    computed: {
-      pageComponent: ({ currentPage }) => {
-        if (currentPage === "Home") return Home;
-        else return Fake;
       }
     }
   };

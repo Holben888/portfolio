@@ -1,6 +1,6 @@
 <nav>
 	{#each routes as route}
-	<a class="navItem" on:click="goTo(event, route)" href="{route.path}" style="--size: {iconSize}rem">
+	<a class="navItem" on:click="goTo(event, route)" href="{route.path}" style="--width: {width}; --size: {iconSize}rem">
 		<div class="icon__{route.icon}">
 		</div>
 	</a>
@@ -33,15 +33,14 @@
 </style>
 
 <script>
-  import * as routes from "../pages/routes.js";
+  import * as routeImport from "../pages/routes.js";
+  const { routes } = routeImport;
 
   export default {
-    oncreate() {
-      console.log(this.get());
-    },
     data: () => ({
-      routes: routes.default || [],
-      iconSize: 3
+      routes: routes || [],
+      iconSize: 3,
+      width: 0
     }),
     methods: {
       goTo(event, route) {

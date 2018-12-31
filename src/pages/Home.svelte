@@ -1,18 +1,20 @@
 <GradientManager on:update="updateGradients(event)" />
-<div class="text-container">
-	<h1>
-		<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="BEN" size="{headerSize}" />
-		<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="HOLMES" size="{headerSize}" />
-	</h1>
-	<p><span>A student developer with a</span>
-		<span class="color-bar-underline">passion
-			<span>
-				<ColorBar gradientIndex={sharedGradient.index} />
-			</span>
-		</span> <span>for web dev 👨‍💻</span>
-	</p>
-	<div class="footer-container">
-		<ColorBar gradientIndex={sharedGradient.index} />
+<div class="container">
+	<div class="text-container">
+		<h1>
+			<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="BEN" size="{headerSize}" />
+			<PopoutText textShadowCss={sharedGradient.textShadowCssString} words="HOLMES" size="{headerSize}" />
+		</h1>
+		<p><span>A student developer with a</span>
+			<span class="color-bar-underline">passion
+				<span>
+					<ColorBar gradientIndex={sharedGradient.index} />
+				</span>
+			</span> <span>for web dev 👨‍💻</span>
+		</p>
+		<div class="footer-container">
+			<ColorBar gradientIndex={sharedGradient.index} />
+		</div>
 	</div>
 </div>
 
@@ -20,6 +22,18 @@
   h1 {
     margin: 0;
     margin-left: -0.5rem;
+  }
+  .container {
+    --footer-size: 1rem;
+    width: 100%;
+    max-width: 100rem;
+    height: 100%;
+    max-height: 70rem;
+    padding: 2rem;
+    margin-bottom: var(--footer-size);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
   }
   .text-container {
     max-width: 30em;

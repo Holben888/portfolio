@@ -1,4 +1,4 @@
-module.exports = [
+const routes = [
   {
     path: "/",
     component: 'Home',
@@ -20,3 +20,9 @@ module.exports = [
     icon: "about"
   },
 ]
+const matchingRoute = (path) => routes.find(route => route.path === path) || routes[0];
+
+module.exports = {
+  routes: routes,
+  matchingRoute: matchingRoute,
+}
