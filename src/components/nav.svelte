@@ -33,7 +33,6 @@
 </style>
 
 <script>
-  import Icon from "./icon.svelte";
   import * as routes from "../pages/routes.js";
 
   export default {
@@ -44,9 +43,6 @@
       routes: routes.default || [],
       iconSize: 3
     }),
-    components: {
-      Icon
-    },
     methods: {
       goTo(event, route) {
         event.preventDefault();
