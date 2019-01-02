@@ -2,6 +2,8 @@
 
 <style>
   .bar {
+    --index: 0;
+    --length: 0;
     width: 100%;
     height: inherit;
     background-attachment: fixed;
