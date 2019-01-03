@@ -10,7 +10,10 @@
 				<span>
 					<ColorBar gradientIndex={sharedGradient.index} />
 				</span>
-			</span> <span>for web dev 👨‍💻</span>
+			</span> <span>for web dev</span>
+		</p>
+		<p>{#each socialLinks as socialLink}
+			<SocialLink {...socialLink}/> {/each}
 		</p>
 		<div class="footer-container">
 			<ColorBar gradientIndex={sharedGradient.index} />
@@ -26,9 +29,7 @@
   .container {
     --footer-size: 1rem;
     width: 100%;
-    max-width: 100rem;
     height: 100%;
-    max-height: 70rem;
     padding: 2rem;
     margin-bottom: var(--footer-size);
     display: flex;
@@ -37,7 +38,6 @@
   }
   .text-container {
     max-width: 30em;
-    overflow: scroll;
     padding: 2rem 1.5rem;
     text-align: right;
   }
@@ -60,7 +60,7 @@
     height: 0.3rem;
   }
   .footer-container {
-    width: 100%;
+    width: 100vw;
     height: var(--footer-size);
     position: absolute;
     bottom: 0;
@@ -72,12 +72,14 @@
   import ColorBar from "../components/color-bar.svelte";
   import GradientManager from "../components/gradient-manager.svelte";
   import PopoutText from "../components/popout-text.svelte";
+  import SocialLink from "../components/SocialLink.svelte";
 
   export default {
     components: {
       PopoutText,
       ColorBar,
-      GradientManager
+      GradientManager,
+      SocialLink
     },
     methods: {
       updateGradients(updated) {
@@ -88,7 +90,27 @@
     },
     data: () => ({
       sharedGradient: {},
-      headerSize: 5
+      headerSize: 5,
+      socialLinks: [
+        {
+          text: "Github",
+          icon: "👨‍💻",
+          link: "https://github.com/Holben888?tab=repositories",
+          color: "hsla(204, 21%, 40%, 1)"
+        },
+        {
+          text: "Twitter",
+          icon: "🐦",
+          link: "https://twitter.com/BHolmesDev",
+          color: "hsla(203, 88%, 53%, 1)"
+        },
+        {
+          text: "Medium",
+          icon: "📖",
+          link: "https://medium.com/@Holben",
+          color: "hsla(164, 94%, 34%, 1)"
+        }
+      ]
     })
   };
 </script>

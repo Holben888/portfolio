@@ -1,21 +1,31 @@
 <div class="background">
-	<Nav on:pageChanged="onPageChange(event)" width={navWidth} /> {#each pages as page} {#if renderAll || currentPage===page.name}
-	<content style="--navWidth: {navWidth}; display: {currentPage===page.name ? 'block' : 'none'}">
-		<svelte:component this="{page.component}" />
-	</content> {/if} {/each}
+	<div class="container">
+		<Nav on:pageChanged="onPageChange(event)" width={navWidth} /> {#each pages as page} {#if renderAll || currentPage===page.name}
+		<content style="--navWidth: {navWidth}; display: {currentPage===page.name ? 'block' : 'none'}">
+			<svelte:component this="{page.component}" />
+		</content> {/if} {/each}
+	</div>
 </div>
 
 <style>
+  .container {
+    max-width: 100rem;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   content {
     width: calc(100vw - var(--navWidth));
+    overflow-y: scroll;
   }
   .background {
     background: var(--grey-9);
-    display: flex;
+    position: relative;
+    z-index: 1;
     height: 100%;
     width: 100%;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
   }
 </style>
 

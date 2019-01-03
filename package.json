@@ -13,7 +13,10 @@
   "scripts": {
     "watch": "rollup --watch -c rollup.config.js",
     "build": "rollup -c rollup.config.js",
-    "serve": "node server.js"
+    "serve": "nodemon --watch public server.js",
+    "start": "node server.js"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
 }

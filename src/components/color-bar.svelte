@@ -1,9 +1,10 @@
-<div class="bar" style="background-image: {backgroundImage}; --index: {gradientIndex}; --length: {gradientLength}"></div>
+<span class="bar" style="background-image: {backgroundImage}; --index: {gradientIndex}; --length: {gradientLength}"></span>
 
 <style>
   .bar {
     --index: 0;
     --length: 0;
+    display: block;
     width: 100%;
     height: inherit;
     background-attachment: fixed;
