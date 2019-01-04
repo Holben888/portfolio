@@ -51,6 +51,10 @@
       colorShiftCallback();
       this.colorShift = setInterval(colorShiftCallback, 5000);
     },
+    ondestroy() {
+      clearInterval(this.colorShift);
+      clearInterval(this.colorStep);
+    },
     data: () => ({
       index: -1,
       textShadowCssString: "",
