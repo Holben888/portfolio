@@ -69,9 +69,9 @@
 </style>
 
 <script>
-  import ColorBar from "../components/color-bar.svelte";
-  import GradientManager from "../components/gradient-manager.svelte";
-  import PopoutText from "../components/popout-text.svelte";
+  import ColorBar from "../components/ColorBar.svelte";
+  import GradientManager from "../components/GradientManager.svelte";
+  import PopoutText from "../components/PopoutText.svelte";
   import SocialLink from "../components/SocialLink.svelte";
 
   export default {
