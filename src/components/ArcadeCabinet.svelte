@@ -166,7 +166,6 @@
   }
 
   .screen p {
-    font-family: "Share Tech Mono", monospace;
     text-align: center;
     animation: blink-start 1.5s infinite step-end;
   }

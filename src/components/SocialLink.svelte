@@ -5,18 +5,19 @@
 <style>
   p {
     --color: #000;
+    font-weight: 400;
   }
   span.text {
     margin-right: 1rem;
-    font-weight: 600;
     text-decoration-line: underline;
     text-decoration-color: var(--color);
   }
   a {
     color: var(--color);
-    padding: 0.4rem 0.8rem;
+    padding: 0.4em 0.8em;
     position: relative;
     border-radius: 0.5rem;
+    font-weight: inherit;
   }
   a::before {
     content: "";

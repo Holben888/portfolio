@@ -1,5 +1,10 @@
 <div class="container">
-	<ArcadeCabinet />
+	<div class="cabinet-container">
+		<ArcadeCabinet />
+	</div>
+	<div class="text-container">
+
+	</div>
 </div>
 
 <style>
@@ -10,7 +15,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(#faaca8, #ddd6f3);
+  }
+  .text-container {
+    background: var(--grey-9);
   }
 </style>
 

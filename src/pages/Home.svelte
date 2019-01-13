@@ -48,12 +48,12 @@
     color: var(--grey-1);
     margin: 0;
     font-size: 30px;
-    font-family: "Titillium Web";
-    font-weight: 300;
+    font-weight: 100;
   }
   .color-bar-underline {
     display: inline-block;
     width: auto;
+    font-weight: 400;
   }
   .color-bar-underline > span {
     width: 100%;
