@@ -32,6 +32,7 @@
 <script>
   import Nav from "./components/nav.svelte";
   import Home from "./pages/Home.svelte";
+  import GameShelf from "./pages/GameShelf.svelte";
   import Fake from "./pages/Fake.svelte";
 
   const pages = [
@@ -42,6 +43,10 @@
     {
       name: "Fake",
       component: Fake
+    },
+    {
+      name: "GameShelf",
+      component: GameShelf
     }
   ];
 

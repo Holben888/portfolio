@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: "/games",
-    component: 'Fake',
+    component: 'GameShelf',
     icon: "game-shelf"
   },
   {
