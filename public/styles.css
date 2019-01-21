@@ -11,12 +11,25 @@
   --grey-3: hsla(0, 0%, 25%, 1);
   --grey-9: hsla(0, 0%, 90%, 1);
   --primary: hsla(51, 99%, 62%);
+  --nav-left-margin: 10rem;
+  --title-text-size: 20px;
+  --title-text-weight: 500;
+}
+
+p.title-text {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+p.supporting-text {
+  font-size: 1rem;
+  font-weight: 300;
 }
 
 html {
   font-family: input-mono, monospace;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
 }
 
@@ -31,4 +44,13 @@ body {
 a {
   text-decoration: none;
   color: var(--grey-9);
+}
+
+@media only screen and (min-width: 100rem) {
+  p.title-text {
+    font-size: 2.5rem;
+  }
+  p.supporting-text {
+    font-size: 1.8rem;
+  }
 }
