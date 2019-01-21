@@ -30,7 +30,7 @@
 </style>
 
 <script>
-  import Nav from "./components/nav.svelte";
+  import Nav from "./components/Nav.svelte";
   import Home from "./pages/Home.svelte";
   import GameShelf from "./pages/GameShelf.svelte";
   import Fake from "./pages/Fake.svelte";
