@@ -5,6 +5,7 @@
 			<svelte:component this="{page.component}" />
 		</content> {/if} {/each}
 	</div>
+	<div class="scan-line"></div>
 </div>
 
 <style>
@@ -20,12 +21,32 @@
     overflow-y: scroll;
   }
   .background {
-    background: var(--grey-9);
+    background: linear-gradient(var(--grey-1) 75%, var(--grey-3) 75%) repeat;
+    background-size: 100% 0.3rem;
     position: relative;
     z-index: 1;
     height: 100%;
     width: 100%;
     overflow: hidden;
+  }
+  .scan-line {
+    width: 100%;
+    height: 1px;
+    background: #888;
+    opacity: 0.4;
+    position: absolute;
+    bottom: 0;
+    animation: scan 8s linear infinite;
+  }
+  @keyframes scan {
+    0% {
+      transform: translateY(0);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-100vh);
+      opacity: 0.1;
+    }
   }
 </style>
 

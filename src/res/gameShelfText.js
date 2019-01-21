@@ -23,7 +23,7 @@ export default [{
   content: {
     "Built": "May 2015",
     "Language(s)": "Java + Swing",
-    "About": `Well, it's Galaga 🤷‍`,
+    "About": `Like the Namco classic to precede it, this game takes you on an intergalactic journey shooting away at enemy spacecraft. But you have to act fast, or you might fall prey to some not-so-friendly fire!`,
     "Challenges": `This game is still special to me since it's the first full game I ever made. Armed with a few months of Java Swing experience, an ancient IDE called BlueJ, and the GIMP photo editor, I set out to make an arcade classic (with some updated sprite shading to boot). It took weeks to hit completion, and it still only plays through the first level, but it was the first exciting project I had to get me into programming.`,
   },
   next: "GameBoy Tennis",

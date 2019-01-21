@@ -45,7 +45,7 @@
     padding-bottom: 1rem;
   }
   .text-container p {
-    color: var(--grey-1);
+    color: var(--grey-9);
     margin: 0;
     font-size: 30px;
     font-weight: 100;

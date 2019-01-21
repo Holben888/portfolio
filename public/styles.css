@@ -7,8 +7,9 @@
 
 :root {
   --header-size: 4rem;
-  --grey-9: hsla(0, 0%, 10%, 1);
-  --grey-1: hsla(0, 0%, 90%, 1);
+  --grey-1: hsla(0, 0%, 10%, 1);
+  --grey-3: hsla(0, 0%, 25%, 1);
+  --grey-9: hsla(0, 0%, 90%, 1);
   --primary: hsla(51, 99%, 62%);
 }
 

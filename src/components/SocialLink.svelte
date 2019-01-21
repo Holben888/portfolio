@@ -32,7 +32,7 @@
     z-index: -1;
   }
   a:hover {
-    color: var(--grey-1);
+    color: var(--grey-9);
   }
   a:hover::before {
     width: 100%;
