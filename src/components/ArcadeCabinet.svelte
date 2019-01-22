@@ -7,7 +7,7 @@
 	<div class="body banner-inset rot-margin"></div>
 	<div class="body screen-back">
 		<div class="screen">
-			<p>Press start</p>
+			<img src="{image}" alt="Gameplay preview" />
 			<div class="scan-line"></div>
 		</div>
 	</div>
@@ -163,11 +163,17 @@
     align-items: center;
     border-radius: 0.5rem;
     position: relative;
+    overflow: hidden;
   }
 
   .screen p {
     text-align: center;
     animation: blink-start 1.5s infinite step-end;
+  }
+
+  .screen img {
+    width: 100%;
+    height: 100%;
   }
 
   .screen .scan-line {

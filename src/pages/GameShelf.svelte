@@ -1,6 +1,6 @@
 <div class="container">
 	<div class="cabinet-container">
-		<ArcadeCabinet />
+		<ArcadeCabinet image="/images/{image}" />
 	</div>
 	<div class="text-container">
 		{#each gameInfoSet as gameInfo, index}
@@ -11,11 +11,13 @@
 				</p>
 				{#each Object.entries(gameInfo.content) as [label, text]}
 				<p class="supporting-text">
-					<WordFlicker phrase={label + ":"} customClass="label" />
+					<WordFlicker phrase={label + ":"} customStyle="background: red" />
 					<WordFlicker phrase={text} />
 				</p>
 				{/each}
-				<a href="#project{index >= gameInfoSet.length - 1 ? 0 : index + 1}">{`Next project: ${gameInfo.next} -->`}</a>
+				<a href="#project{index >= gameInfoSet.length - 1 ? 0 : index + 1}" on:click="setImage(index)">{`Next project: ${gameInfo.next}
+					-->`}
+				</a>
 			</div>
 		</div>
 		{/each}
@@ -70,7 +72,7 @@
     border-radius: 0.5rem;
   }
   a:hover {
-    animation: flicker 0.5s linear forwards;
+    animation: flicker 0.3s linear forwards;
   }
   .info-section:target {
     opacity: 0;
@@ -87,7 +89,7 @@
     text-shadow: 0 0 2rem var(--grey-9);
     color: var(--grey-9);
   }
-  .info-section :global(.label) {
+  .p :global(.label) {
     background: red;
   }
 
@@ -174,16 +176,34 @@
   import WordFlicker from "../components/WordFlicker.svelte";
   import gameInfoSet from "../res/gameShelfText";
 
+  const checkForValidHash = () => {
+    const match = /#project?(.*)/.exec(window.location.hash);
+    if (!match || parseInt(match[1]) >= gameInfoSet.length) {
+      //invalid hash
+      window.location.hash = "#project0";
+    }
+  };
+
   export default {
     oncreate() {
-      window.location.hash = "#project0";
+      checkForValidHash();
+      window.onhashchange = checkForValidHash;
     },
     components: {
       ArcadeCabinet,
       WordFlicker
     },
     data: () => ({
-      gameInfoSet: gameInfoSet
-    })
+      gameInfoSet: gameInfoSet,
+      image: gameInfoSet[0].image || ""
+    }),
+    methods: {
+      setImage(index) {
+        const nextIndex = index >= gameInfoSet.length - 1 ? 0 : index + 1;
+        this.set({
+          image: gameInfoSet[nextIndex].image
+        });
+      }
+    }
   };
 </script>
