@@ -81,20 +81,22 @@
   ref:cabinet {
     --perspectiveX: 50%;
     --perspectiveY: 20%;
-    perspective: 15rem;
+    perspective: 15em;
     perspective-origin: var(--perspectiveX) var(--perspectiveY);
-    --body-inset: 0.4rem;
-    --screen-inset: -1.5rem;
+    --body-inset: 0.4em;
+    --screen-inset: -1.5em;
+    margin: auto;
+    font-size: var(--arcade-cabinet-scaling);
   }
 
   .body {
     background: #333;
-    width: 20rem;
+    width: 20em;
     transform-style: preserve-3d;
   }
 
   .banner {
-    height: 7rem;
+    height: 7em;
     transform: translateZ(var(--body-inset));
   }
   .banner .inner {
@@ -114,7 +116,7 @@
     height: 64%;
     width: 100%;
     background: url("https://svgshare.com/i/AU8.svg") no-repeat center;
-    background-size: 26rem;
+    background-size: 26em;
     box-shadow: #ae0eff 0 0 15px;
     animation: banner-pulse 4s ease-in-out infinite;
   }
@@ -135,9 +137,9 @@
   }
 
   .banner-inset {
-    --angle-translate: -0.95rem;
+    --angle-translate: -0.95em;
     --angle: 40;
-    height: 3rem;
+    height: 3em;
     transform-origin: center;
     transform: translateZ(calc(var(--angle-translate) + var(--body-inset)))
       rotateX(-40deg);
@@ -145,9 +147,9 @@
   }
 
   .screen-back {
-    height: 14rem;
+    height: 14em;
     transform: translateZ(var(--screen-inset));
-    margin-bottom: -1.4rem;
+    margin-bottom: -1.4em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -161,7 +163,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 0.5rem;
+    border-radius: 0.5em;
     position: relative;
     overflow: hidden;
   }
@@ -181,7 +183,7 @@
     height: 1px;
     background: #888;
     position: absolute;
-    bottom: 0.5rem;
+    bottom: 0.5em;
     animation: scan 4s linear infinite;
   }
 
@@ -191,7 +193,7 @@
       opacity: 0.8;
     }
     100% {
-      transform: translateY(-10rem);
+      transform: translateY(-10em);
       opacity: 0.1;
     }
   }
@@ -206,14 +208,14 @@
   }
 
   .controls {
-    --angle-translate: -1.3rem;
+    --angle-translate: -1.3em;
     --angle: 90;
-    height: 2.6rem;
+    height: 2.6em;
     transform: translateZ(calc(var(--screen-inset) - var(--angle-translate)))
       rotateX(89.9deg);
   }
   .controls .inner {
-    --shift-down: 0.4rem;
+    --shift-down: 0.4em;
     width: 92%;
     height: calc(100% - var(--shift-down));
     margin: auto;
@@ -224,42 +226,42 @@
   }
   .controls .inner .joystick {
     position: absolute;
-    top: 0.7rem;
-    right: 2.5rem;
+    top: 0.7em;
+    right: 2.5em;
   }
 
   .controls .inner .joystick .base {
-    width: 3rem;
-    height: 0.8rem;
+    width: 3em;
+    height: 0.8em;
     border-radius: 50%;
     background: linear-gradient(-40deg, #444, #222);
     transform: translateY(0);
   }
   .controls .inner .joystick .stick {
     transform-origin: top;
-    transform: rotateX(90deg) translateZ(0.4rem);
+    transform: rotateX(90deg) translateZ(0.4em);
   }
   .controls .inner .joystick .stalk {
     margin: auto;
-    height: 1.5rem;
-    width: 0.5rem;
+    height: 1.5em;
+    width: 0.5em;
     background: #333333;
   }
   .controls .inner .joystick .head {
     margin: auto;
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.5em;
+    width: 1.5em;
     border-radius: 50%;
     background: linear-gradient(-70deg, #ff2f2f, #801818);
-    transform: translateY(-0.5rem);
+    transform: translateY(-0.5em);
   }
   .inner .stripes {
     height: 100%;
-    width: 3.8rem;
+    width: 3.8em;
     position: absolute;
-    padding: 0 2rem;
+    padding: 0 2em;
     top: 0;
-    right: 0.2rem;
+    right: 0.2em;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -267,9 +269,9 @@
   }
   .controls .inner .stripes > * {
     --tilt: 50deg;
-    width: 0.7rem;
+    width: 0.7em;
     height: 200%;
-    transform: rotateZ(var(--tilt)) translateZ(0.1rem);
+    transform: rotateZ(var(--tilt)) translateZ(0.1em);
   }
 
   .controls .inner .stripes .yellow {
@@ -286,10 +288,10 @@
 
   .buttons {
     height: 100%;
-    width: 6rem;
+    width: 6em;
     position: absolute;
     top: 0;
-    left: 3rem;
+    left: 3em;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -314,8 +316,8 @@
   }
 
   .controls .buttons .button-base {
-    width: 1.7rem;
-    height: 0.6rem;
+    width: 1.7em;
+    height: 0.6em;
     background: radial-gradient(var(--base-dark) 25%, var(--base-light));
     border-radius: 50%;
   }
@@ -325,33 +327,33 @@
     background: linear-gradient(90deg, var(--base-dark), var(--base-light));
   }
   .controls .buttons .button-body {
-    width: 0.8rem;
-    height: 0.5rem;
+    width: 0.8em;
+    height: 0.5em;
     position: absolute;
     left: 25%;
     transform-origin: bottom;
-    transform: rotateX(-89.9deg) translateZ(-0.3rem);
+    transform: rotateX(-89.9deg) translateZ(-0.3em);
   }
   .controls .buttons .button-body-base {
-    width: 1rem;
-    height: 0.4rem;
+    width: 1em;
+    height: 0.4em;
     margin: auto;
     border-radius: 50%;
-    margin-top: -0.6rem;
+    margin-top: -0.6em;
   }
   .controls .buttons .button-head {
-    width: 1rem;
-    height: 0.5rem;
+    width: 1em;
+    height: 0.5em;
     border-radius: 50%;
     margin: auto;
     background: radial-gradient(var(--head-light) 10%, var(--head-dark));
-    transform: translateY(0.5rem) translateZ(0.5rem);
+    transform: translateY(0.5em) translateZ(0.5em);
   }
 
   .controls-face {
-    height: 3rem;
-    transform: translateZ(1.1rem);
-    margin-bottom: -0.15rem;
+    height: 3em;
+    transform: translateZ(1.1em);
+    margin-bottom: -0.15em;
   }
 
   .controls-face .inner {
@@ -362,12 +364,12 @@
   }
 
   .controls-face .stripes {
-    width: 4.1rem;
-    right: 2.2rem;
+    width: 4.1em;
+    right: 2.2em;
   }
 
   .controls-face .stripes > * {
-    width: 1rem;
+    width: 1em;
     height: 100%;
   }
 
@@ -384,48 +386,48 @@
   }
 
   .controls-inset {
-    --angle-translate: 0.75rem;
+    --angle-translate: 0.75em;
     --angle: 10;
-    height: 4rem;
+    height: 4em;
     transform-origin: center;
     transform: translateZ(var(--angle-translate)) rotateX(-10deg);
     background: linear-gradient(#444444, #222222);
   }
 
   .base {
-    height: 13rem;
-    margin-top: -0.15rem;
+    height: 13em;
+    margin-top: -0.15em;
     transform: translateZ(var(--body-inset));
   }
 
   .base .spacing {
-    height: 1.5rem;
+    height: 1.5em;
   }
 
   .base .coin-door-outer {
     margin: auto;
-    width: 5rem;
-    height: 7rem;
+    width: 5em;
+    height: 7em;
     border: 2px solid #222222;
-    border-radius: 0.2rem;
+    border-radius: 0.2em;
     background: linear-gradient(40deg, #232323, #444);
   }
   .base .coin-door-inner {
     margin: auto;
-    width: 4rem;
-    height: 5.5rem;
+    width: 4em;
+    height: 5.5em;
     display: flex;
     flex-direction: column;
-    margin-top: 0.75rem;
+    margin-top: 0.75em;
     border: 2px solid #222222;
     box-sizing: border-box;
-    border-radius: 0.8rem;
+    border-radius: 0.8em;
   }
   .base .insert-coin-border {
     margin: 0 auto;
-    margin-top: 1rem;
-    width: 1.5rem;
-    height: 1.2rem;
+    margin-top: 1em;
+    width: 1.5em;
+    height: 1.2em;
     border: 1px solid #111;
     display: flex;
     justify-content: space-between;
@@ -434,27 +436,27 @@
   .base .insert-coin-border .slot {
     margin-left: 10%;
     height: 80%;
-    width: 0.3rem;
+    width: 0.3em;
     background: #111;
   }
   .base .insert-coin-border .refund {
     margin-right: 10%;
     height: 80%;
-    width: 0.6rem;
+    width: 0.6em;
     background: linear-gradient(#620b0b, #9a0404, #790c0c);
     border-top: 1px solid #111;
     border-bottom: 1px solid #111;
   }
   .base .keyhole {
-    width: 0.5rem;
-    height: 0.5rem;
-    margin-top: 0.1rem;
-    margin-right: 0.2rem;
+    width: 0.5em;
+    height: 0.5em;
+    margin-top: 0.1em;
+    margin-right: 0.2em;
     align-self: flex-end;
     border-radius: 50%;
     background: #cccccc;
     border: 1px solid #777;
-    transform: translateZ(0.1rem);
+    transform: translateZ(0.1em);
   }
 
   .rot-margin {

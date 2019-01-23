@@ -1,6 +1,6 @@
-<div class="container">
-	<div class="cabinet-container">
-		<ArcadeCabinet image="/images/{image}" />
+<div class="container" ref:container on:scroll="setCabinetOpacity()">
+	<div class="cabinet-container" ref:arcadeCabinet>
+		<ArcadeCabinet image="/images/{gameInfoSet[projectIndex].image}" />
 	</div>
 	<div class="text-container">
 		{#each gameInfoSet as gameInfo, index}
@@ -15,8 +15,8 @@
 					<WordFlicker phrase={text} />
 				</p>
 				{/each}
-				<a href="#project{index >= gameInfoSet.length - 1 ? 0 : index + 1}" on:click="setImage(index)">{`Next project: ${gameInfo.next}
-					-->`}
+				<a href="#project{index >= gameInfoSet.length - 1 ? 0 : index + 1}" on:click="setProjectIndex(index)">{`Next project:
+					${gameInfo.next} -->`}
 				</a>
 			</div>
 		</div>
@@ -30,15 +30,16 @@
     height: 100%;
     display: flex;
     justify-content: flex-end;
+    overflow-y: scroll;
   }
   .text-container {
-    max-width: 50em;
+    max-width: 45em;
     width: 100%;
     height: 100vh;
     position: relative;
     visibility: hidden;
     animation: fade-in 0.1s forwards;
-    animation-delay: 1s;
+    animation-delay: 1.5s;
   }
   .info-section {
     --fade-in-delay: 0.5s;
@@ -57,7 +58,6 @@
     margin: auto;
   }
   p :global(.wordFlicker) {
-    --flicker-delay: 0s;
     opacity: 0.9;
     animation: flicker-out 0.5s forwards;
   }
@@ -97,12 +97,26 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
     bottom: 0;
     display: flex;
     align-items: center;
     padding-left: var(--nav-left-margin);
     z-index: -1;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    .container {
+      flex-direction: column;
+    }
+    .cabinet-container {
+      position: sticky;
+      padding: 0;
+      padding-top: 5rem;
+      --arcade-cabinet-scaling: 1.5vh;
+    }
+    .text-container {
+      margin-top: -5vh;
+    }
   }
 
   @keyframes fade-in {
@@ -176,18 +190,22 @@
   import WordFlicker from "../components/WordFlicker.svelte";
   import gameInfoSet from "../res/gameShelfText";
 
-  const checkForValidHash = () => {
+  const getProjectIndexIfValidHash = () => {
     const match = /#project?(.*)/.exec(window.location.hash);
     if (!match || parseInt(match[1]) >= gameInfoSet.length) {
       //invalid hash
       window.location.hash = "#project0";
+      return 0;
     }
+    return match[1];
   };
 
   export default {
     oncreate() {
-      checkForValidHash();
-      window.onhashchange = checkForValidHash;
+      this.set({
+        projectIndex: getProjectIndexIfValidHash()
+      });
+      window.onhashchange = getProjectIndexIfValidHash;
     },
     components: {
       ArcadeCabinet,
@@ -195,14 +213,24 @@
     },
     data: () => ({
       gameInfoSet: gameInfoSet,
+      projectIndex: 0,
       image: gameInfoSet[0].image || ""
     }),
     methods: {
-      setImage(index) {
+      setProjectIndex(index) {
         const nextIndex = index >= gameInfoSet.length - 1 ? 0 : index + 1;
         this.set({
-          image: gameInfoSet[nextIndex].image
+          projectIndex: nextIndex
         });
+      },
+      setCabinetOpacity() {
+        const { container, arcadeCabinet } = this.refs;
+        const viewHeight = Math.max(
+          document.documentElement.clientWidth,
+          window.innerWidth || 0
+        );
+        const opacity = 1 - (container.scrollTop / viewHeight) * 1.8;
+        arcadeCabinet.style = `opacity: ${opacity}`;
       }
     }
   };

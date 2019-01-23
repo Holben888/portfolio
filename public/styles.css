@@ -45,12 +45,3 @@ a {
   text-decoration: none;
   color: var(--grey-9);
 }
-
-@media only screen and (min-width: 100rem) {
-  p.title-text {
-    font-size: 2.5rem;
-  }
-  p.supporting-text {
-    font-size: 1.8rem;
-  }
-}
