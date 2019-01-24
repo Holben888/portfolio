@@ -1,6 +1,8 @@
 <div class="container" ref:container on:scroll="setCabinetOpacity()">
-	<div class="cabinet-container" ref:arcadeCabinet>
-		<ArcadeCabinet image="/images/{gameInfoSet[projectIndex].image}" />
+	<div class="cabinet-container-outer" ref:arcadeCabinet>
+		<div class="cabinet-container-inner">
+			<ArcadeCabinet image="/images/{gameInfoSet[projectIndex].image}" />
+		</div>
 	</div>
 	<div class="text-container">
 		{#each gameInfoSet as gameInfo, index}
@@ -34,6 +36,8 @@
   }
   .text-container {
     max-width: 45em;
+    margin-left: 23rem;
+    margin-right: 5vw;
     width: 100%;
     height: 100vh;
     position: relative;
@@ -93,29 +97,44 @@
     background: red;
   }
 
-  .cabinet-container {
+  .cabinet-container-outer {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
     bottom: 0;
     display: flex;
-    align-items: center;
-    padding-left: var(--nav-left-margin);
+    flex-direction: column;
     z-index: -1;
   }
 
-  @media only screen and (max-width: 1000px) {
+  .cabinet-container-inner {
+    max-width: var(--max-page-width);
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: var(--nav-left-margin);
+  }
+
+  @media only screen and (max-width: 70em) {
     .container {
       flex-direction: column;
     }
-    .cabinet-container {
+    .cabinet-container-outer {
       position: sticky;
-      padding: 0;
       padding-top: 5rem;
-      --arcade-cabinet-scaling: 1.5vh;
+      --arcade-cabinet-scaling: calc(1.5vh + 1px);
+    }
+    .cabinet-container-inner {
+      padding: 0;
+      justify-content: center;
+      align-items: flex-start;
     }
     .text-container {
       margin-top: -5vh;
+      margin: auto;
     }
   }
 
@@ -229,7 +248,7 @@
           document.documentElement.clientWidth,
           window.innerWidth || 0
         );
-        const opacity = 1 - (container.scrollTop / viewHeight) * 1.8;
+        const opacity = 1 - (container.scrollTop / viewHeight) * 1.4;
         arcadeCabinet.style = `opacity: ${opacity}`;
       }
     }

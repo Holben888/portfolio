@@ -10,7 +10,7 @@
 
 <style>
   .container {
-    max-width: 100rem;
+    max-width: var(--max-page-width);
     margin: auto;
     display: flex;
     justify-content: center;

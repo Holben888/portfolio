@@ -85,7 +85,6 @@
     perspective-origin: var(--perspectiveX) var(--perspectiveY);
     --body-inset: 0.4em;
     --screen-inset: -1.5em;
-    margin: auto;
     font-size: var(--arcade-cabinet-scaling);
   }
 
@@ -117,7 +116,7 @@
     width: 100%;
     background: url("https://svgshare.com/i/AU8.svg") no-repeat center;
     background-size: 26em;
-    box-shadow: #ae0eff 0 0 15px;
+    box-shadow: #ae0eff 0 0 1.1em;
     animation: banner-pulse 4s ease-in-out infinite;
   }
 
@@ -126,10 +125,10 @@
       box-shadow: #ae0eff 0 0 0;
     }
     25% {
-      box-shadow: #ae0eff 0 0 15px;
+      box-shadow: #ae0eff 0 0 1.1em;
     }
     75% {
-      box-shadow: #ae0eff 0 0 15px;
+      box-shadow: #ae0eff 0 0 1.1em;
     }
     100% {
       box-shadow: #ae0eff 0 0 0;
@@ -180,7 +179,7 @@
 
   .screen .scan-line {
     width: 100%;
-    height: 1px;
+    height: 0.2em;
     background: #888;
     position: absolute;
     bottom: 0.5em;
@@ -408,7 +407,7 @@
     margin: auto;
     width: 5em;
     height: 7em;
-    border: 2px solid #222222;
+    border: 0.1em solid #222222;
     border-radius: 0.2em;
     background: linear-gradient(40deg, #232323, #444);
   }
@@ -419,7 +418,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 0.75em;
-    border: 2px solid #222222;
+    border: 0.1em solid #222222;
     box-sizing: border-box;
     border-radius: 0.8em;
   }
@@ -428,7 +427,7 @@
     margin-top: 1em;
     width: 1.5em;
     height: 1.2em;
-    border: 1px solid #111;
+    border: 0.1em solid #111;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -444,8 +443,8 @@
     height: 80%;
     width: 0.6em;
     background: linear-gradient(#620b0b, #9a0404, #790c0c);
-    border-top: 1px solid #111;
-    border-bottom: 1px solid #111;
+    border-top: 0.1em solid #111;
+    border-bottom: 0.1em solid #111;
   }
   .base .keyhole {
     width: 0.5em;
@@ -455,7 +454,7 @@
     align-self: flex-end;
     border-radius: 50%;
     background: #cccccc;
-    border: 1px solid #777;
+    border: 0.1em solid #777;
     transform: translateZ(0.1em);
   }
 

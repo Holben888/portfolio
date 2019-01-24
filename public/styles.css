@@ -12,8 +12,7 @@
   --grey-9: hsla(0, 0%, 90%, 1);
   --primary: hsla(51, 99%, 62%);
   --nav-left-margin: 10rem;
-  --title-text-size: 20px;
-  --title-text-weight: 500;
+  --max-page-width: 90rem;
 }
 
 p.title-text {
