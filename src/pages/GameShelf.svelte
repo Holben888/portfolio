@@ -41,9 +41,9 @@
     width: 100%;
     height: 100vh;
     position: relative;
-    visibility: hidden;
-    animation: fade-in 0.1s forwards;
-    animation-delay: 1.5s;
+    opacity: 0;
+    animation: fade-in 0.5s linear forwards;
+    animation-delay: 0.5s;
   }
   .info-section {
     --fade-in-delay: 0.5s;
@@ -225,6 +225,7 @@
         projectIndex: getProjectIndexIfValidHash()
       });
       window.onhashchange = getProjectIndexIfValidHash;
+      this.refs.container.scrollTo(0, 0);
     },
     components: {
       ArcadeCabinet,
